@@ -1,0 +1,28 @@
+body {
+background-color: #4ABDAC;
+}
+
+form {
+background-color: #F7B733 !important;
+border: 10px dotted white;
+padding-left: 50px;
+}
+
+
+h1 {
+margin: 40px;
+}
+
+//Need to include an image
+img {
+	height: 1em;
+}
+
+h2 {
+	text-align: center;
+}
+
+.test {
+	background-color: #FC4A1A;
+}
+
