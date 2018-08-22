@@ -161,7 +161,7 @@ ${passwordTest }
  
   
   <div class="form-group row ml-2">
-    <div class="col-sm-10">
+    <div class="col-sm-12">
       <button type="submit" class="btn btn-primary">Register</button>
     </div>
   </div>

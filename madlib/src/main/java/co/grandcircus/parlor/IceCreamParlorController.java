@@ -1,22 +1,40 @@
 package co.grandcircus.parlor;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import co.grandcircus.parlor.dao.IceCreamDao;
+import co.grandcircus.parlor.dao.ParlorDao;
+
 @Controller
 public class IceCreamParlorController {
 	
+	
+	@Autowired
+	private ParlorDao parlorDao;
+	
+	@Autowired
+	private IceCreamDao iceCreamDao;
+	
 	@RequestMapping("/")
 	public ModelAndView showHomePage() {
+		List<IceCream> iceCreams = iceCreamDao.findAll();
 		
 		String greeting = "Welcome to ScoopZ Ice-Cream Parlor!";
 		
 		ModelAndView mav = new ModelAndView("index");
 		mav.addObject("greeting", greeting);
+		mav.addObject("iceCreams", iceCreams);
 		return mav;
 	}
+			 
+	
 	
 	@RequestMapping("/registration")
 	public ModelAndView showRegistration() {
@@ -49,6 +67,8 @@ public class IceCreamParlorController {
 			user.setPassword(password1);
 			user.setGender(gender);
 			user.setBirthdate(birthdate);
+			
+			parlorDao.create(user);
 			
 			ModelAndView mav = new ModelAndView("summary");
 			
