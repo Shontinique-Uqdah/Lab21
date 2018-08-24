@@ -2,6 +2,7 @@ package co.grandcircus.parlor;
 
 public class User {
 
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String password;
@@ -9,15 +10,17 @@ public class User {
 	private String phoneNum;
 	private String gender;
 	private String birthdate;
+	private boolean admin;
 	
 	
-	public User(String firstName, String lastName, String password, String email, String phoneNum, String gender) {
+	public User(String firstName, String lastName, String password, String email, String phoneNum, String gender, boolean admin) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.password = password;
 		this.email = email;
 		this.phoneNum = phoneNum;
 		this.gender = gender;
+		this.admin = admin;
 	}
 
 	public User() {
@@ -89,6 +92,22 @@ public class User {
 	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
 		
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+	
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 	
 	

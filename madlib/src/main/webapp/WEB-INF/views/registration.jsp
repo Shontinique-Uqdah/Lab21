@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,9 +15,9 @@
 <body>
 <div class="container">
 
-<h2>Let's get you registered!</h2>
+<h2 class="center">Let's get you registered!</h2>
 
-<form action="/summary" method="post" class="form-inline change-color">
+<form action="/summary" method="post" class="form-inline change-color register">
 
 <fieldset class="form-group">
 <legend>Who are you?</legend>

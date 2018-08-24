@@ -10,16 +10,42 @@
 <link rel="stylesheet" href="/style.css" />
 <title>Home</title>
 </head>
-<body>
+<body class="index">
 <div class="container">
-<h1 style = "text-align: center;">${greeting}!</h1>
-<p style= "text-align: center;"><a href="/registration">Register Here!</a></p>
 
-<h1>Parlor Treats</h1>
-		<table class="table">
+<h1 class="center">${greeting}!</h1>
+<p class="center"><a href="/registration">Register Here!</a></p>
+<p class="center"><a href="/login-form/member">Member Log-in</a></p>
+<p class="center"><a href="/login-form/admin">Admin Log-in</a></p>
+
+<h1 class="center">Parlor Treats
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Ice_Cream_dessert_02.jpg">
+</h1>
+	
+	
+		
+		<table class="table table-hover">
 			<thead>
+			<tr>
+			<td><form class="form-inline" action="/" autocomplete="off">
+		  <label class="sr-only" for="inlineFormInputName2">Category</label>
+		  
+		  
+		  <%-- prefill a form input using the value attribute. --%>
+		  <input type="text" value="${category}" class="form-control mb-2 mr-sm-2" id="category" name="category" placeholder="Category">
+		
+		  <button type="submit" class="btn btn-primary mb-2 mr-2">Search</button>
+		  
+		  <c:if test="${not empty category}">
+		    <%-- c:if determines whether its contents should show or not --%>
+		  	<a href="/" class="btn btn-secondary mb-2">Clear</a>
+	  	  </c:if>
+	  	  
+		</form>
+		</td>
+		</tr>
 				<tr>
-					<th>Flavor</th><th>Description</th><th>Quantity</th><th>Price</th>
+					<th>Flavor</th><th>Description</th><th>Quantity</th><th>Price</th><th>Category</th><th>Peek</th><th colspan="2"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -29,10 +55,22 @@
 					<td>${iceCream.description}</td>
 					<td>${iceCream.quantity}</td>
 					<td>${iceCream.price}</td>
+					<td>${iceCream.category}</td>
+					<td><img src="${iceCream.image}"/></td>
+					
+					<c:if test="${type eq 'admin' }">
+					<td><button><a href="/edit-item/${iceCream.id }">Edit</a></button></td>
+					<td><button><a href="/delete-item/${iceCream.id }">Delete</a></button></td>
+					</c:if>
+					
 				</tr>
 				</c:forEach>
 			</tbody>
 		</table>
+		
+		<c:if test="${type eq 'admin' }">
+		<button><a href="/add-item">Add a new treat</a></button>
+		</c:if>
 		
 	</div>
 

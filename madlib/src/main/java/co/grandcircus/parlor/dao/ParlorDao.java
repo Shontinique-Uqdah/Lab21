@@ -46,14 +46,24 @@ public class ParlorDao {
 	//Add entry to your database
 	public void create(User user) {
 		String sql = "INSERT INTO Users (firstName, lastName, password, email, phoneNum,"
-				+ "gender, birthdate) VALUES (?, ?, ?, ?, ?, ?, ?)";
+				+ "gender, birthdate, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		jdbcTemplate.update(sql, user.getFirstName(), user.getLastName(), user.getPassword(), user.getEmail(),
-				user.getPhoneNum(), user.getGender(), user.getBirthdate());
+				user.getPhoneNum(), user.getGender(), user.getBirthdate(), user.isAdmin());
 	}
 	
 	public void delete(Long id) {
 		String sql = "DELETE FROM Users WHERE id = ?";
 		jdbcTemplate.update(sql, id);
 	}
+	
+	//Search your database by id
+		public User findByEmail(String email) {
+			//? says that number can change...then when you query for the object...
+			String  sql = "SELECT * FROM Users WHERE email = ?";
+			
+			//...you add a final parameter, id, which tells it that is the value that will
+			//take the place of the question mark above
+			return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), email);
+		}
 
 }

@@ -45,14 +45,24 @@ public class IceCreamDao {
 	
 	//Add entry to your database
 	public void create(IceCream iceCream) {
-		String sql = "INSERT INTO items (name, description, quantity, price) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO items (name, description, quantity, price, category, image) VALUES (?, ?, ?, ?, ?, ?)";
 		jdbcTemplate.update(sql, iceCream.getName(), iceCream.getDescription(), iceCream.getQuantity(),
-				iceCream.getPrice());
+				iceCream.getPrice(), iceCream.getCategory(), iceCream.getImage());
 	}
 	
 	public void delete(Long id) {
 		String sql = "DELETE FROM items WHERE id = ?";
 		jdbcTemplate.update(sql, id);
 	}
+	
+	//Search your database by category
+		public List<IceCream> findByCategory(String category) {
+			//? says that number can change...then when you query for the object...
+			String  sql = "SELECT * FROM items WHERE category = ?";
+			
+			//...you add a final parameter, category, which tells it that is the value that will
+			//take the place of the question mark above
+			return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(IceCream.class), category);
+		}
 
 }

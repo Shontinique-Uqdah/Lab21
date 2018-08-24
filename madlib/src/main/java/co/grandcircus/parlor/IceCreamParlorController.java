@@ -1,6 +1,7 @@
 package co.grandcircus.parlor;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,14 +24,50 @@ public class IceCreamParlorController {
 	private IceCreamDao iceCreamDao;
 	
 	@RequestMapping("/")
-	public ModelAndView showHomePage() {
+	public ModelAndView showHomePage(@RequestParam(value="category", required=false) String category) {
 		List<IceCream> iceCreams = iceCreamDao.findAll();
+		List<IceCream> iceCreamsByCategory = iceCreamDao.findByCategory(category);
+		
+//		Maybe request param and use email to state user name?
+//		User user = parlorDao.findByEmail(email);
 		
 		String greeting = "Welcome to ScoopZ Ice-Cream Parlor!";
+			ModelAndView mav = new ModelAndView("index");
+			mav.addObject("greeting", greeting);
 		
-		ModelAndView mav = new ModelAndView("index");
-		mav.addObject("greeting", greeting);
-		mav.addObject("iceCreams", iceCreams);
+		
+		if (category != null && !category.isEmpty()) {
+			mav.addObject("iceCreams", iceCreamsByCategory);
+			mav.addObject("category", category);
+		} else {
+			mav.addObject("iceCreams", iceCreams);
+		}
+		
+		return mav;
+	}
+	
+	@RequestMapping("/{type}")
+	public ModelAndView showHomePage(@RequestParam(value="category", required=false) String category,
+			@PathVariable("type") String type) {
+		List<IceCream> iceCreams = iceCreamDao.findAll();
+		List<IceCream> iceCreamsByCategory = iceCreamDao.findByCategory(category);
+		
+//		Maybe request param and use email to state user name?
+//		User user = parlorDao.findByEmail(email);
+		
+		String greeting = "Welcome to ScoopZ Ice-Cream Parlor!";
+			ModelAndView mav = new ModelAndView("index");
+			mav.addObject("greeting", greeting);
+			mav.addObject("type", type);
+		
+		
+		if (category != null && !category.isEmpty()) {
+			mav.addObject("iceCreams", iceCreamsByCategory);
+			mav.addObject("category", category);
+		} else {
+			mav.addObject("iceCreams", iceCreams);
+		}
+		
 		return mav;
 	}
 			 
@@ -41,6 +78,7 @@ public class IceCreamParlorController {
 		ModelAndView mav = new ModelAndView("registration");
 		return mav;
 	}
+	
 	
 	@RequestMapping("/summary")
 	public ModelAndView showSummary(
@@ -67,6 +105,7 @@ public class IceCreamParlorController {
 			user.setPassword(password1);
 			user.setGender(gender);
 			user.setBirthdate(birthdate);
+			user.setAdmin(false);
 			
 			parlorDao.create(user);
 			
@@ -93,4 +132,63 @@ public class IceCreamParlorController {
 			return mav;
 		}
 	}
+	
+	//Allows to specify whether a user or admin is logging in, using same form
+	@RequestMapping("/login-form/{type}")
+	public ModelAndView showLoginForm(@PathVariable("type") String type) {
+		ModelAndView mav = new ModelAndView("login-form");
+		mav.addObject("type", type);
+		return mav;
+	}
+	
+	
+	@RequestMapping("/verify-login/{type}")
+	public ModelAndView verifyLogin(@RequestParam("email") String email, 
+			@RequestParam("password") String password,
+			@PathVariable("type") String type) {
+		
+		User user = parlorDao.findByEmail(email);
+		
+		String loginFailed;
+		ModelAndView mav;
+		
+		if (user != null) {
+			if (user.isAdmin() && password.matches(user.getPassword())) {
+				mav = new ModelAndView("redirect:/admin");
+				mav.addObject("user", user);
+			}
+			else if (user.isAdmin() && !password.matches(user.getPassword())){
+			loginFailed = "Sorry, that password does not match any administrators in our records. Please try again.";
+			mav = new ModelAndView("redirect:/login-form/admin");
+			mav.addObject("loginFailed", loginFailed);
+			mav.addObject("email", email);
+			}
+			else if (password.matches(user.getPassword())) {
+			mav = new ModelAndView("redirect:/member");
+			mav.addObject("user", user);
+			}
+			else {
+				loginFailed = "Sorry, that password does not match our records. Please try again.";
+				mav = new ModelAndView("redirect:/login-form/member");
+				mav.addObject("loginFailed", loginFailed);
+				mav.addObject("email", email);
+			}
+		}
+		
+		else {
+			if (type.equals("admin")) {
+				loginFailed = "Sorry, there is no admin associated with that email address.";
+				mav = new ModelAndView("redirect:/login-form/admin");
+				mav.addObject("loginFailed", loginFailed);
+			}
+			else {
+				loginFailed = "Sorry, there is no member associated with that email address.";
+				mav = new ModelAndView("redirect:/login-form/member");
+				mav.addObject("loginFailed", loginFailed);
+			}
+		
+		}
+		return mav;
+	}
+	
 }
