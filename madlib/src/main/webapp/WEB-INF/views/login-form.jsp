@@ -53,11 +53,11 @@
         <button type="submit" class="btn btn-primary">Login</button>
         <!--  Gives option to register if not a member -->
         <c:if test="${type ne 'admin'}">
-		<a href="redirect:/registration">Not a Member? Register><button type="submit" class="btn btn-secondary"></button></a>
+		<button type="submit" class="btn btn-secondary"><a href="redirect:/registration">Not a Member? Register></a></button>
     	</c:if>
     	<!-- Gives option to login as member if on admin view but not admin -->
     	<c:if test="${type eq 'admin'}">
-		<a href="redirect:/login-form/member">Not admin? Member login><button type="submit" class="btn btn-secondary"></button></a>
+		<button type="submit" class="btn btn-secondary"><a href="redirect:/login-form/member">Not admin? Member login></a></button>
     	</c:if>
     </form>
     </div>

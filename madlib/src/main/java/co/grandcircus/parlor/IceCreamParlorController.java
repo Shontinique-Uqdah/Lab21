@@ -46,16 +46,23 @@ public class IceCreamParlorController {
 		return mav;
 	}
 	
-	@RequestMapping("/{type}")
+	@RequestMapping("/logged-in/{type}")
 	public ModelAndView showHomePage(@RequestParam(value="category", required=false) String category,
-			@PathVariable("type") String type) {
+			@PathVariable("type") String type, @RequestParam("user") User user) {
 		List<IceCream> iceCreams = iceCreamDao.findAll();
 		List<IceCream> iceCreamsByCategory = iceCreamDao.findByCategory(category);
 		
 //		Maybe request param and use email to state user name?
 //		User user = parlorDao.findByEmail(email);
 		
-		String greeting = "Welcome to ScoopZ Ice-Cream Parlor!";
+		String greeting;
+		
+		if (type.equals("admin")) {
+			greeting = "Administrator View";
+		}
+		else {
+			greeting = "Welcome back to ScoopZ " + user.getFirstName() + "!";
+		}
 			ModelAndView mav = new ModelAndView("index");
 			mav.addObject("greeting", greeting);
 			mav.addObject("type", type);
@@ -154,8 +161,7 @@ public class IceCreamParlorController {
 		
 		if (user != null) {
 			if (user.isAdmin() && password.matches(user.getPassword())) {
-				mav = new ModelAndView("redirect:/admin");
-				mav.addObject("user", user);
+				mav = new ModelAndView("/logged-in/admin?user=user");
 			}
 			else if (user.isAdmin() && !password.matches(user.getPassword())){
 			loginFailed = "Sorry, that password does not match any administrators in our records. Please try again.";
@@ -164,9 +170,7 @@ public class IceCreamParlorController {
 			mav.addObject("email", email);
 			}
 			else if (password.matches(user.getPassword())) {
-			mav = new ModelAndView("redirect:/member");
-			mav.addObject("user", user);
-			}
+			mav = new ModelAndView("/logged-in/member/user=user");			}
 			else {
 				loginFailed = "Sorry, that password does not match our records. Please try again.";
 				mav = new ModelAndView("redirect:/login-form/member");
