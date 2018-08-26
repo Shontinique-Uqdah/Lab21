@@ -20,21 +20,20 @@
 <div class="main-div">
     <div class="panel">
     
-    
-   <p>Please enter your email and password</p>
+   <p>Please enter your email and password </p>
+   <c:if test="${not empty fail }">
+   <div class="test"> ${fail } </div>
+   </c:if>
    </div>
+   
    <!-- ${type eq 'admin' ? '/admin' : '/verify-login'} was using this to set path, but changed to below -->
     <form action="/verify-login/${type }" id="Login" method="post">
+    
+   		
 
         <div class="form-group">
-        <c:if test="${not empty loginFailed }">
-				<div class="test">
-				${loginFailed }
-				</div>
-			</c:if>
 
-
-            <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" value="${email }">
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" value= "${email }" >
 
         </div>
 
@@ -53,11 +52,11 @@
         <button type="submit" class="btn btn-primary">Login</button>
         <!--  Gives option to register if not a member -->
         <c:if test="${type ne 'admin'}">
-		<button type="submit" class="btn btn-secondary"><a href="redirect:/registration">Not a Member? Register></a></button>
+		<button type="submit" class="btn btn-secondary"><a href="/registration">Not a Member? Register></a></button>
     	</c:if>
     	<!-- Gives option to login as member if on admin view but not admin -->
     	<c:if test="${type eq 'admin'}">
-		<button type="submit" class="btn btn-secondary"><a href="redirect:/login-form/member">Not admin? Member login></a></button>
+		<button type="submit" class="btn btn-secondary"><a href="/login-form/member">Not admin? Member login></a></button>
     	</c:if>
     </form>
     </div>

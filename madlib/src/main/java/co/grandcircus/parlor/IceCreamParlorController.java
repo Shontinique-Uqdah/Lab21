@@ -5,10 +5,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.grandcircus.parlor.dao.IceCreamDao;
 import co.grandcircus.parlor.dao.ParlorDao;
@@ -47,8 +50,8 @@ public class IceCreamParlorController {
 	}
 	
 	@RequestMapping("/logged-in/{type}")
-	public ModelAndView showHomePage(@RequestParam(value="category", required=false) String category,
-			@PathVariable("type") String type, @RequestParam("user") User user) {
+	public ModelAndView showHomePageLoggedIn(@RequestParam(value="category", required=false) String category,
+			@PathVariable("type") String type, @ModelAttribute("user") User user) {
 		List<IceCream> iceCreams = iceCreamDao.findAll();
 		List<IceCream> iceCreamsByCategory = iceCreamDao.findByCategory(category);
 		
@@ -142,56 +145,86 @@ public class IceCreamParlorController {
 	
 	//Allows to specify whether a user or admin is logging in, using same form
 	@RequestMapping("/login-form/{type}")
-	public ModelAndView showLoginForm(@PathVariable("type") String type) {
+	public ModelAndView showLoginForm(@PathVariable("type") String type, @ModelAttribute("fail") String fail) {
 		ModelAndView mav = new ModelAndView("login-form");
 		mav.addObject("type", type);
+		
+		if (!fail.equals("")) {
+			mav.addObject("fail", fail);
+		}
 		return mav;
 	}
 	
-	
+	//RedirectAttributes allows me to send data from one controller to another when I redirect, so I can redirect and keep user info
+	//Addflash attribute enables me to do so without showing the info in the clientside url
 	@RequestMapping("/verify-login/{type}")
-	public ModelAndView verifyLogin(@RequestParam("email") String email, 
-			@RequestParam("password") String password,
-			@PathVariable("type") String type) {
+	public ModelAndView verifyLogin(@PathVariable("type") String type, 
+			@RequestParam("email") String email, @RequestParam("password") String password, RedirectAttributes redir) {
 		
-		User user = parlorDao.findByEmail(email);
+		User user;
+		try {
+		 user = parlorDao.findByEmail(email);
+		}
 		
-		String loginFailed;
-		ModelAndView mav;
+		catch(Exception ex) {
+			user = null;
+		}
 		
-		if (user != null) {
-			if (user.isAdmin() && password.matches(user.getPassword())) {
-				mav = new ModelAndView("/logged-in/admin?user=user");
+		String fail = "";
+		ModelAndView mav = null;
+		
+		if (type.equals("admin")) {
+			
+			if (user != null) {
+				
+				if (user.isAdmin() && password.matches(user.getPassword())) {
+					mav = new ModelAndView("redirect:/logged-in/admin");
+					redir.addFlashAttribute("user", user);
+				}
+				
+				else if (user.isAdmin() && !password.matches(user.getPassword())){
+					fail = "Sorry, that password does not match any administrators in our records. Please try again.";
+					mav = new ModelAndView("redirect:/login-form/admin");
+					redir.addAttribute("fail", fail);
+					redir.addAttribute("email", email);
+					}
+				
 			}
-			else if (user.isAdmin() && !password.matches(user.getPassword())){
-			loginFailed = "Sorry, that password does not match any administrators in our records. Please try again.";
-			mav = new ModelAndView("redirect:/login-form/admin");
-			mav.addObject("loginFailed", loginFailed);
-			mav.addObject("email", email);
-			}
-			else if (password.matches(user.getPassword())) {
-			mav = new ModelAndView("/logged-in/member/user=user");			}
+			
 			else {
-				loginFailed = "Sorry, that password does not match our records. Please try again.";
-				mav = new ModelAndView("redirect:/login-form/member");
-				mav.addObject("loginFailed", loginFailed);
-				mav.addObject("email", email);
+				fail = "Sorry, there is no admin associated with that email address.";
+				mav = new ModelAndView("redirect/login-form/admin");
+				mav.addObject("fail", fail);
 			}
 		}
 		
-		else {
-			if (type.equals("admin")) {
-				loginFailed = "Sorry, there is no admin associated with that email address.";
-				mav = new ModelAndView("redirect:/login-form/admin");
-				mav.addObject("loginFailed", loginFailed);
+		else if (type.equals("member")) {
+			
+			if (user != null) {
+				
+				if (!user.isAdmin() && password.matches(user.getPassword())) {
+					mav = new ModelAndView("redirect:/logged-in/member");
+					redir.addFlashAttribute("user", user);
+				}
+				
+				else {
+					fail = "Sorry, that password does not match our records. Please try again.";
+					mav = new ModelAndView("redirect:/login-form/member");
+					redir.addAttribute("fail", fail);
+					redir.addAttribute("email", email);
+				}
 			}
+			
 			else {
-				loginFailed = "Sorry, there is no member associated with that email address.";
+				
+				fail = "Sorry, there is no member associated with that email address.";
 				mav = new ModelAndView("redirect:/login-form/member");
-				mav.addObject("loginFailed", loginFailed);
+				redir.addAttribute("fail", fail);
 			}
-		
 		}
+		
+		
+			
 		return mav;
 	}
 	

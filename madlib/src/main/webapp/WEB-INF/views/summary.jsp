@@ -15,7 +15,7 @@
 <h1> <img src="/owl.jpg" alt="owl"/> Registration Successful!</h1>
 
 <p>Thanks ${firstName} and welcome to the ScoopZ family!</p>
-<button type="submit"><a href="redirect:/">Return Home</a></button>
+<button type="submit"><a href="/">Return Home</a></button>
 </div>
 </body>
 </html>
