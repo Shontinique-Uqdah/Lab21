@@ -55,8 +55,6 @@ public class IceCreamParlorController {
 		List<IceCream> iceCreams = iceCreamDao.findAll();
 		List<IceCream> iceCreamsByCategory = iceCreamDao.findByCategory(category);
 		
-//		Maybe request param and use email to state user name?
-//		User user = parlorDao.findByEmail(email);
 		
 		String greeting;
 		
@@ -69,6 +67,7 @@ public class IceCreamParlorController {
 			ModelAndView mav = new ModelAndView("index");
 			mav.addObject("greeting", greeting);
 			mav.addObject("type", type);
+			mav.addObject("user", user);
 		
 		
 		if (category != null && !category.isEmpty()) {
@@ -193,8 +192,8 @@ public class IceCreamParlorController {
 			
 			else {
 				fail = "Sorry, there is no admin associated with that email address.";
-				mav = new ModelAndView("redirect/login-form/admin");
-				mav.addObject("fail", fail);
+				mav = new ModelAndView("redirect:/login-form/admin");
+				redir.addAttribute("fail", fail);
 			}
 		}
 		
@@ -228,4 +227,99 @@ public class IceCreamParlorController {
 		return mav;
 	}
 	
+	//Should work now
+	@RequestMapping("/show-edit-item/{userEmail}/{id}")
+	public ModelAndView showEditItem(@PathVariable("userEmail") String email, @PathVariable("id") Long id) {
+		IceCream iceCream = iceCreamDao.findByID(id);
+		User user = parlorDao.findByEmail(email);
+		
+		ModelAndView mav = new ModelAndView("add-edit-item");
+		mav.addObject("iceCream", iceCream);
+		mav.addObject("user", user);
+		mav.addObject("action", "Edit");
+		return mav;
+	}
+	
+	//Should work now
+	@RequestMapping("/edit-item/{userEmail}/{id}")
+	public ModelAndView editItem(@PathVariable("userEmail") String email, @PathVariable("id") Long id, @RequestParam("name") String name,
+			@RequestParam("description") String description, @RequestParam("quantity") int quantity, @RequestParam("price") float price, 
+			@RequestParam("category") String category, @RequestParam("image") String image, RedirectAttributes redir) {
+		
+		IceCream iceCream = iceCreamDao.findByID(id);
+		User user = parlorDao.findByEmail(email);
+		
+		iceCream.setName(name);
+		iceCream.setDescription(description);
+		iceCream.setQuantity(quantity);
+		iceCream.setPrice(price);
+		iceCream.setCategory(category);
+		iceCream.setImage(image);
+		
+		iceCreamDao.update(iceCream);
+		
+		
+		ModelAndView mav = new ModelAndView("redirect:/logged-in/admin");
+		redir.addFlashAttribute("user", user);
+		return mav;
+	}
+	
+	@RequestMapping("/delete-item/{userEmail}/{id}")
+	public ModelAndView deleteItem(@PathVariable("userEmail") String email, @PathVariable("id") Long id, RedirectAttributes redir) {
+		User user = parlorDao.findByEmail(email);
+		
+		iceCreamDao.delete(id);
+		
+		ModelAndView mav = new ModelAndView("redirect:/logged-in/admin");
+		redir.addFlashAttribute("user", user);
+		return mav;
+	}
+	
+	
+	@RequestMapping("/show-add-item/{userEmail}")
+	public ModelAndView showAddItem(@PathVariable("userEmail") String email) {
+		User user = parlorDao.findByEmail(email);
+		
+		ModelAndView mav = new ModelAndView("add-edit-item");
+		mav.addObject("user", user);
+		mav.addObject("action", "Add");
+		return mav;
+	}
+	
+	@RequestMapping("/add-item/{userEmail}")
+	public ModelAndView deleteItem(@PathVariable("userEmail") String email, @RequestParam("name") String name,
+			@RequestParam("description") String description, @RequestParam("quantity") int quantity, @RequestParam("price") float price, 
+			@RequestParam("category") String category, @RequestParam("image") String image, RedirectAttributes redir) {
+		
+		User user = parlorDao.findByEmail(email);
+		IceCream iceCream = new IceCream();
+		
+		iceCream.setName(name);
+		iceCream.setDescription(description);
+		iceCream.setQuantity(quantity);
+		iceCream.setPrice(price);
+		iceCream.setCategory(category);
+		iceCream.setImage(image);
+		
+		iceCreamDao.create(iceCream);
+		
+		ModelAndView mav = new ModelAndView("redirect:/logged-in/admin");
+		redir.addFlashAttribute("user", user);
+		return mav;
+	}
 }
+
+/*TO-DO:
+ * 
+ * Make all my new jsps...one for add item(no iceCream added to mav so no preloaded values will show) use c:if to share jsp with edit 
+ * item(same form/page with preloaded values using jsp tags because icecream is already added),
+ *  one for delete item.
+ * Make delete item controller...right now it is set up to delete, but doesnt ask for confirmation
+ * Make add item controller!
+ * Use javascript to make a confirm delete prompt pop up on click or use bootstrap modal that david was talking about
+ * Allow user option to delete account!
+ * 
+ * Use form at this url for add/edit and possibly for registration!
+ * https://bootsnipp.com/snippets/featured/register-and-login-form-with-bootstrap-with-new-ui
+ */
+

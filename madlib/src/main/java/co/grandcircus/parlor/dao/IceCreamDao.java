@@ -65,4 +65,12 @@ public class IceCreamDao {
 			return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(IceCream.class), category);
 		}
 
+
+		public void update(IceCream iceCream) {
+			String sql = "UPDATE items SET name= ?, description = ?, quantity= ?, price= ?, category= ?, image= ? WHERE id= ?";
+			jdbcTemplate.update(sql, iceCream.getName(), iceCream.getDescription(), iceCream.getQuantity(), iceCream.getPrice(), 
+					iceCream.getCategory(), iceCream.getImage(), iceCream.getId());
+			
+		}
+
 }

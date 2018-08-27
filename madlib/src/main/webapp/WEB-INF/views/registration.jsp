@@ -13,7 +13,8 @@
 
 
 <body>
-<div class="container">
+ <div class="container">
+ <button class="btn btn-warning"><a href="/">Back to Home Page</a></button>
 
 <h2 class="center">Let's get you registered!</h2>
 
@@ -170,11 +171,7 @@ ${passwordTest }
 </form>
 </div>
 
+
 </body>
 
 </html>
-
-<!-- 
-
-
- -->

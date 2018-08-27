@@ -10,13 +10,21 @@
 <link rel="stylesheet" href="/style.css" />
 <title>Home</title>
 </head>
+
 <body class="index">
 <div class="container">
 
 <h1 class="center">${greeting}!</h1>
+
+<c:if test="${empty user }">
 <p class="center"><a href="/registration">Register Here!</a></p>
 <p class="center"><a href="/login-form/member">Member Log-in</a></p>
 <p class="center"><a href="/login-form/admin">Admin Log-in</a></p>
+</c:if>
+
+<c:if test="${not empty user}">
+<a class="btn btn-danger" href ="/">Log-out</a>
+</c:if>
 
 <h1 class="center">Parlor Treats
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Ice_Cream_dessert_02.jpg">
@@ -59,8 +67,8 @@
 					<td><img src="${iceCream.image}"/></td>
 					
 					<c:if test="${type eq 'admin' }">
-					<td><button><a href="/edit-item/${iceCream.id }">Edit</a></button></td>
-					<td><button><a href="/delete-item/${iceCream.id }">Delete</a></button></td>
+					<td><button><a href="/show-edit-item/${user.email }/${iceCream.id }">Edit</a></button></td>
+					<td><button><a href="/delete-item/${user.email }/${iceCream.id }">Delete</a></button></td>
 					</c:if>
 					
 				</tr>
@@ -69,7 +77,7 @@
 		</table>
 		
 		<c:if test="${type eq 'admin' }">
-		<button><a href="/add-item">Add a new treat</a></button>
+		<button><a href="/show-add-item/${user.email }">Add a new treat</a></button>
 		</c:if>
 		
 	</div>
