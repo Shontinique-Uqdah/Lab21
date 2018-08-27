@@ -1,14 +1,16 @@
+/*Shontinique Uqdah
+ * August 23, 2018
+ */
+
 package co.grandcircus.parlor;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -311,15 +313,10 @@ public class IceCreamParlorController {
 
 /*TO-DO:
  * 
- * Make all my new jsps...one for add item(no iceCream added to mav so no preloaded values will show) use c:if to share jsp with edit 
- * item(same form/page with preloaded values using jsp tags because icecream is already added),
  *  one for delete item.
- * Make delete item controller...right now it is set up to delete, but doesnt ask for confirmation
- * Make add item controller!
+ * Make delete item controller...right now it is set up to delete, but doesnt ask for confirmation..too final.
  * Use javascript to make a confirm delete prompt pop up on click or use bootstrap modal that david was talking about
  * Allow user option to delete account!
  * 
- * Use form at this url for add/edit and possibly for registration!
- * https://bootsnipp.com/snippets/featured/register-and-login-form-with-bootstrap-with-new-ui
  */
 
