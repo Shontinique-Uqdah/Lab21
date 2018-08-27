@@ -1,8 +1,21 @@
 package co.grandcircus.parlor;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+//Mark all entity classes with @Entity so that Hibernate knows about them.
+@Entity
+@Table(name= "users")
 public class User {
 
+	// Mark the ID, and designate that it is auto-generated
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	
 	private String firstName;
 	private String lastName;
 	private String password;
@@ -23,6 +36,7 @@ public class User {
 		this.admin = admin;
 	}
 
+	// With Hibernate, you'll generally want to make sure you have a no-arg constructor
 	public User() {
 		
 	}

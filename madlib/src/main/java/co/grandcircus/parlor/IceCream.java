@@ -1,12 +1,30 @@
 package co.grandcircus.parlor;
 
+//import javax.persistence.Column;			Just a commented example, not used
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+//Mark all entity classes with @Entity so that Hibernate knows about them.
+@Entity
+@Table(name= "items")
 public class IceCream {
 
+	// Mark the ID, and designate that it is auto-generated
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	
 	private String name;
 	private String description;
 	private int quantity;
 	private float price;
+	
+	// The @Column annotation can be used to adjust many things about the SQL column
+		// associated with a property. Just an example. Could also change other details. This changes length allowed in sql
+		//@Column(length=40)
 	private String category;
 	private String image;
 	
@@ -20,6 +38,7 @@ public class IceCream {
 		this.image = image;
 	}
 	
+	// With Hibernate, you'll generally want to make sure you have a no-arg constructor
 	public IceCream() {
 		
 	}

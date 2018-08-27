@@ -15,26 +15,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import co.grandcircus.parlor.dao.IceCreamDao;
-import co.grandcircus.parlor.dao.ParlorDao;
+//import co.grandcircus.parlor.dao.IceCreamDao; 		Used hibernate instead of the jdbc version of the dao
+import co.grandcircus.parlor.dao.IceCreamDaoHibernate;
+//import co.grandcircus.parlor.dao.ParlorDao;		Used hibernate instead of the jdbc version of the dao
+import co.grandcircus.parlor.dao.ParlorDaoHibernate;
 
 @Controller
 public class IceCreamParlorController {
 	
 	
 	@Autowired
-	private ParlorDao parlorDao;
+	private ParlorDaoHibernate parlorDao;
 	
 	@Autowired
-	private IceCreamDao iceCreamDao;
+	private IceCreamDaoHibernate iceCreamDao;
 	
 	@RequestMapping("/")
 	public ModelAndView showHomePage(@RequestParam(value="category", required=false) String category) {
 		List<IceCream> iceCreams = iceCreamDao.findAll();
-		List<IceCream> iceCreamsByCategory = iceCreamDao.findByCategory(category);
+		List<IceCream> iceCreamsByCategory;
+		try {
+		iceCreamsByCategory = iceCreamDao.findByCategory(category);
+		}
+		catch(Exception ex) {
+			iceCreamsByCategory = null;
+		}
 		
-//		Maybe request param and use email to state user name?
-//		User user = parlorDao.findByEmail(email);
 		
 		String greeting = "Welcome to ScoopZ Ice-Cream Parlor!";
 			ModelAndView mav = new ModelAndView("index");
@@ -317,6 +323,6 @@ public class IceCreamParlorController {
  * Make delete item controller...right now it is set up to delete, but doesnt ask for confirmation..too final.
  * Use javascript to make a confirm delete prompt pop up on click or use bootstrap modal that david was talking about
  * Allow user option to delete account!
- * 
+ * Do it all with hibernate
  */
 
