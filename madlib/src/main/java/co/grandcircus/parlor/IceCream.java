@@ -1,20 +1,23 @@
 package co.grandcircus.parlor;
 
 //import javax.persistence.Column;			Just a commented example, not used
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+//Switched back to jdbc so no longer using these. Here for notes
+//import javax.persistence.Entity;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
+//import javax.persistence.Id;
+//import javax.persistence.Table;
 
 
 //Mark all entity classes with @Entity so that Hibernate knows about them.
-@Entity
-@Table(name= "items")
+//@Entity
+//@Table(name= "items")
+
+
 public class IceCream {
 
 	// Mark the ID, and designate that it is auto-generated
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+//	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	private String name;

@@ -1,28 +1,45 @@
 package co.grandcircus.parlor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+//Used jdbc so commented out all hibernate functionality
+//import javax.persistence.Column;
+//import javax.persistence.Entity;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
+//import javax.persistence.Id;
+//import javax.persistence.Table;
 
 
 //Mark all entity classes with @Entity so that Hibernate knows about them.
-@Entity
-@Table(name= "users")
+//@Entity
+//@Table(name="user")
 public class User {
 
 	// Mark the ID, and designate that it is auto-generated
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+//	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+//	@Column(name="firstName")
 	private String firstName;
+	
+//	@Column(name="lastName")
 	private String lastName;
+	
+//	@Column(name="password")
 	private String password;
+	
+//	@Column(name="email")
 	private String email;
+	
+//	@Column(name="phoneNum")
 	private String phoneNum;
+	
+//	@Column(name="gender")
 	private String gender;
+	
+//	@Column(name="birthdate")
 	private String birthdate;
+	
+//	@Column(name="admin")
 	private boolean admin;
 	
 	
@@ -122,6 +139,13 @@ public class User {
 	
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", password=" + password
+				+ ", email=" + email + ", phoneNum=" + phoneNum + ", gender=" + gender + ", birthdate=" + birthdate
+				+ ", admin=" + admin + "]";
 	}
 	
 	

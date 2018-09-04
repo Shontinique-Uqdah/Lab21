@@ -15,20 +15,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import co.grandcircus.parlor.dao.IceCreamDao;
 //import co.grandcircus.parlor.dao.IceCreamDao; 		Used hibernate instead of the jdbc version of the dao
-import co.grandcircus.parlor.dao.IceCreamDaoHibernate;
+//import co.grandcircus.parlor.dao.IceCreamDaoHibernate;
+import co.grandcircus.parlor.dao.ParlorDao;
 //import co.grandcircus.parlor.dao.ParlorDao;		Used hibernate instead of the jdbc version of the dao
-import co.grandcircus.parlor.dao.ParlorDaoHibernate;
+//import co.grandcircus.parlor.dao.ParlorDaoHibernate;
 
 @Controller
 public class IceCreamParlorController {
 	
+	//These are the hibernate versions. Used jdbc
+//	@Autowired
+//	private ParlorDaoHibernate parlorDao;
+//	
+//	@Autowired
+//	private IceCreamDaoHibernate iceCreamDao;
 	
 	@Autowired
-	private ParlorDaoHibernate parlorDao;
+	private ParlorDao parlorDao;
 	
 	@Autowired
-	private IceCreamDaoHibernate iceCreamDao;
+	private IceCreamDao iceCreamDao;
 	
 	@RequestMapping("/")
 	public ModelAndView showHomePage(@RequestParam(value="category", required=false) String category) {
@@ -170,11 +178,13 @@ public class IceCreamParlorController {
 		
 		User user;
 		try {
-		 user = parlorDao.findByEmail(email);
+			user = parlorDao.findByEmail(email);
+			System.out.println(user);
 		}
 		
 		catch(Exception ex) {
 			user = null;
+			System.out.println("SOMETHING BAD HAPPENED");
 		}
 		
 		String fail = "";
